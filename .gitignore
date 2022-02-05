@@ -35,3 +35,6 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+
+/elasticsearch-7.17.0
+elasticsearch-7.17.0-linux-x86_64.tar.gz

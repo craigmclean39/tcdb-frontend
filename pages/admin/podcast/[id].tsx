@@ -126,9 +126,9 @@ const PodcastDetail: NextPage = () => {
           <Button type='submit'>Delete</Button>
         </form>
 
-        <Group>
+        <Group align='flex-start'>
           <Text>Episodes:</Text>
-          <ul>
+          {/* <ul>
             {data.episodes.map((episode) => {
               return (
                 <li key={episode.guid}>
@@ -141,10 +141,10 @@ const PodcastDetail: NextPage = () => {
                         )}`
                       : ''}
                   </Text>
-                </li>
+                </li> 'o;;;
               );
             })}
-          </ul>
+          </ul> */}
         </Group>
       </Card>
     </>
