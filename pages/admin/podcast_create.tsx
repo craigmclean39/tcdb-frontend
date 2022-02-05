@@ -17,11 +17,9 @@ const PodcastCreate: NextPage = () => {
     try {
       await axios.post('http://localhost:3001/api/podcast/create', values);
       //SUCCESS
-      Router.push('/admin/podcastlist');
+      Router.push('/admin/podcasts');
     } catch (err) {
-      console.log('CATCH');
-      console.dir(err);
-      setServerError(err.response.data.message);
+      setServerError('Error');
       form.setFieldError('rss', true);
     }
   };
