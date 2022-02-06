@@ -4,7 +4,7 @@ import useSWR from 'swr';
 import { Anchor, TextInput, Button } from '@mantine/core';
 import { Podcast } from '../../types/podcast';
 import { useForm } from '@mantine/hooks';
-import { useState } from 'react';
+import Router from 'next/router';
 
 const fetcher = async (apiAddress: any) => {
   const data = await axios.get(`http://localhost:3001${apiAddress}`);
@@ -21,9 +21,7 @@ const Podcasts: NextPage = ({ children }) => {
 
   const handleSubmit = async (values: typeof form['values']) => {
     try {
-      // console.log('Attempting to search with:');
-      // console.log(values);
-      await axios.post(`http://localhost:3001/api/search`, values);
+      Router.push({ pathname: '/admin/search_results', query: values });
     } catch (err) {}
   };
 
@@ -67,12 +65,3 @@ const Podcasts: NextPage = ({ children }) => {
 };
 
 export default Podcasts;
-/* value={form.values.rss}
-        error={form.errors.rss && serverError}
-        onFocus={() => {
-          setServerError('');
-          form.setFieldError('rss', false);
-        }}
-        onChange={(event) =>
-          form.setFieldValue('rss', event.currentTarget.value)
-        } */

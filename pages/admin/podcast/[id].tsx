@@ -16,10 +16,11 @@ import {
   Button,
 } from '@mantine/core';
 import { createStyles } from '@mantine/core';
-import { Podcast, Episode } from '../../../types/podcast';
+import { Podcast } from '../../../types/podcast';
 import { format } from 'date-fns';
 import { useForm } from '@mantine/hooks';
 import Router from 'next/router';
+import { useState } from 'react';
 
 const useStyles = createStyles((theme, _params, getRef) => {
   return {
@@ -42,11 +43,7 @@ const useStyles = createStyles((theme, _params, getRef) => {
 });
 
 const fetcher = async (apiAddress: any) => {
-  /* const data = await axios.get(`http://localhost:3001${apiAddress}`);
-  return data.data as Podcast; */
-
   const data = await axios.get(`http://localhost:3001${apiAddress}`);
-
   return data.data as Podcast;
 };
 
@@ -54,6 +51,7 @@ const PodcastDetail: NextPage = () => {
   const router = useRouter();
   const { id } = router.query;
   const { data, error } = useSWR(id ? `/api/podcast/${id}` : null, fetcher);
+  const [deleting, setDeleting] = useState(false);
 
   const { classes } = useStyles();
 
@@ -64,6 +62,7 @@ const PodcastDetail: NextPage = () => {
   });
 
   const handleSubmit = async (values: typeof form['values']) => {
+    setDeleting(true);
     try {
       await axios.post(
         `http://localhost:3001/api/podcast/${id}/delete`,
@@ -71,7 +70,9 @@ const PodcastDetail: NextPage = () => {
       );
       //SUCCESS
       Router.push('/admin/podcasts');
-    } catch (err) {}
+    } catch (err) {
+      setDeleting(false);
+    }
   };
 
   if (error) return <div>failed to load</div>;
@@ -116,7 +117,11 @@ const PodcastDetail: NextPage = () => {
           </Group>
         </Container>
         <form onSubmit={form.onSubmit(handleSubmit)}>
-          <Button type='submit'>Delete</Button>
+          {!deleting ? (
+            <Button type='submit'>Delete</Button>
+          ) : (
+            <Loader></Loader>
+          )}
         </form>
 
         <Group align='flex-start'>
