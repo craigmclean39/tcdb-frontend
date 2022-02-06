@@ -21,8 +21,8 @@ const Podcasts: NextPage = ({ children }) => {
 
   const handleSubmit = async (values: typeof form['values']) => {
     try {
-      console.log('Attempting to search with:');
-      console.log(values);
+      // console.log('Attempting to search with:');
+      // console.log(values);
       await axios.post(`http://localhost:3001/api/search`, values);
     } catch (err) {}
   };

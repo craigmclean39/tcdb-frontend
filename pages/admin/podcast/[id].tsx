@@ -45,15 +45,9 @@ const fetcher = async (apiAddress: any) => {
   /* const data = await axios.get(`http://localhost:3001${apiAddress}`);
   return data.data as Podcast; */
 
-  const data = await axios.all([
-    axios.get(`http://localhost:3001${apiAddress}`),
-    axios.get(`http://localhost:3001${apiAddress}/episodes`),
-  ]);
+  const data = await axios.get(`http://localhost:3001${apiAddress}`);
 
-  return {
-    podcast: data[0].data as Podcast,
-    episodes: data[1].data.episodes as Episode[],
-  };
+  return data.data as Podcast;
 };
 
 const PodcastDetail: NextPage = () => {
@@ -94,21 +88,21 @@ const PodcastDetail: NextPage = () => {
         <Container className={classes.wrapper}>
           <Group align='flex-start'>
             <Title order={1}>
-              <Text size='sm'>{data.podcast.title}</Text>
+              <Text size='sm'>{data.title}</Text>
             </Title>
-            {data.podcast.image ? (
+            {data.image ? (
               <Image
                 className={classes.image}
-                src={data.podcast.image.url}
-                alt={data.podcast.image.title}></Image>
+                src={data.image.url}
+                alt={data.image.title}></Image>
             ) : (
               <Skeleton animate={false} className={classes.image} />
             )}
           </Group>
           <Container mt='l'>
-            {data.podcast.description ? (
+            {data.description ? (
               <Spoiler maxHeight={120} showLabel='more...' hideLabel='hide'>
-                <Text>{data.podcast.description}</Text>
+                <Text>{data.description}</Text>
               </Spoiler>
             ) : null}
           </Container>
@@ -116,10 +110,9 @@ const PodcastDetail: NextPage = () => {
         <Container my='lg'>
           <Group direction='column' spacing='xs'>
             <Text>
-              Link:{' '}
-              <Anchor href={data.podcast.link}>{data.podcast.link}</Anchor>
+              Link: <Anchor href={data.link}>{data.link}</Anchor>
             </Text>
-            <Text>{data.podcast.copyright}</Text>
+            <Text>{data.copyright}</Text>
           </Group>
         </Container>
         <form onSubmit={form.onSubmit(handleSubmit)}>
@@ -128,23 +121,27 @@ const PodcastDetail: NextPage = () => {
 
         <Group align='flex-start'>
           <Text>Episodes:</Text>
-          {/* <ul>
-            {data.episodes.map((episode) => {
-              return (
-                <li key={episode.guid}>
-                  <Text>{episode.title}</Text>
-                  <Text>
-                    {episode.pubDate
-                      ? `Published: ${format(
-                          new Date(episode.pubDate),
-                          'MMM dd yyyy'
-                        )}`
-                      : ''}
-                  </Text>
-                </li> 'o;;;
-              );
-            })}
-          </ul> */}
+          {
+            <ul>
+              {data.episodes
+                ? data.episodes.map((episode) => {
+                    return (
+                      <li key={episode.guid}>
+                        <Text>{episode.title}</Text>
+                        <Text>
+                          {episode.pubDate
+                            ? `Published: ${format(
+                                new Date(episode.pubDate),
+                                'MMM dd yyyy'
+                              )}`
+                            : ''}
+                        </Text>
+                      </li>
+                    );
+                  })
+                : null}
+            </ul>
+          }
         </Group>
       </Card>
     </>
