@@ -1,3 +1,4 @@
+import { Anchor } from '@mantine/core';
 import axios from 'axios';
 import useSWR from 'swr';
 import { Podcast, Episode } from '../types/podcast';
@@ -43,7 +44,11 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
     return <></>;
   }
 
-  return <div>{`${data?.title}`}</div>;
+  return (
+    <li>
+      <Anchor href={`/admin${data.url}`}>{data.title}</Anchor>
+    </li>
+  );
 };
 
 export default SearchResult;

@@ -1,8 +1,8 @@
 import type { NextPage } from 'next';
-import AdminPage from '../components/adminPage';
+import AdminLayout from '../components/adminLayout';
 
 const Admin: NextPage = ({ children }) => {
-  return <AdminPage>Root</AdminPage>;
+  return <AdminLayout>Root</AdminLayout>;
 };
 
 export default Admin;

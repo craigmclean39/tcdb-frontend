@@ -1,6 +1,16 @@
-import { Anchor, Navbar, NavbarProps } from '@mantine/core';
+import { Anchor, Button, Navbar, NavbarProps, Loader } from '@mantine/core';
+import axios from 'axios';
+import { useState } from 'react';
 
 function AdminNavbar(props: Omit<NavbarProps, 'children'>) {
+  const handleClick = async () => {
+    setLoading(true);
+    await axios.post('http://localhost:3001/api/populate');
+    setLoading(false);
+  };
+
+  const [loading, setLoading] = useState(false);
+
   return (
     <Navbar {...props}>
       <Navbar.Section>
@@ -8,6 +18,13 @@ function AdminNavbar(props: Omit<NavbarProps, 'children'>) {
       </Navbar.Section>
       <Navbar.Section>
         <Anchor href='/admin/podcasts'>Podcast List</Anchor>
+      </Navbar.Section>
+      <Navbar.Section>
+        {loading ? (
+          <Loader></Loader>
+        ) : (
+          <Button onClick={handleClick}>Populate</Button>
+        )}
       </Navbar.Section>
     </Navbar>
   );

@@ -132,7 +132,9 @@ const PodcastDetail: NextPage = () => {
                 ? data.episodes.map((episode) => {
                     return (
                       <li key={episode.guid}>
-                        <Text>{episode.title}</Text>
+                        <Anchor href={`/admin${episode.url}`}>
+                          {episode.title}
+                        </Anchor>
                         <Text>
                           {episode.pubDate
                             ? `Published: ${format(

@@ -30,9 +30,7 @@ const Podcasts: NextPage = ({ children }) => {
     elements = data.data.map((podcast: Podcast) => {
       return (
         <li key={podcast.title}>
-          <Anchor href={`/admin/podcast/${podcast._id}`}>
-            {podcast.title}
-          </Anchor>
+          <Anchor href={`/admin${podcast.url}`}>{podcast.title}</Anchor>
         </li>
       );
     });

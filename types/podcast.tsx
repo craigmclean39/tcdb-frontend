@@ -34,4 +34,5 @@ export interface Episode {
   isoDate?: string;
   duration?: string;
   season?: number;
+  url?: string;
 }

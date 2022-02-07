@@ -41,7 +41,15 @@ const SearchResults: NextPage = ({ children }) => {
     <>
       <h1>Search Results</h1>
       <h2>{router.query.search}</h2>
-      {data ? (data.hits.length === 0 ? 'No Results' : searchResults) : ''}
+      {data ? (
+        data.hits.length === 0 ? (
+          'No Results'
+        ) : (
+          <ul>{searchResults}</ul>
+        )
+      ) : (
+        ''
+      )}
     </>
   );
 };
