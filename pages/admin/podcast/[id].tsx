@@ -2,45 +2,14 @@ import type { NextPage } from 'next';
 import axios from 'axios';
 import useSWR from 'swr';
 import { useRouter } from 'next/router';
-import {
-  Container,
-  Image,
-  Loader,
-  Skeleton,
-  Title,
-  Text,
-  Spoiler,
-  Card,
-  Group,
-  Anchor,
-  Button,
-} from '@mantine/core';
 import { createStyles } from '@mantine/core';
 import { Podcast } from '../../../types/podcast';
-import { format } from 'date-fns';
 import { useForm } from '@mantine/hooks';
 import Router from 'next/router';
 import { useState } from 'react';
-
-const useStyles = createStyles((theme, _params, getRef) => {
-  return {
-    wrapper: {
-      display: 'flex',
-      alignItems: 'flex-start',
-      flexDirection: 'row',
-      justifyContent: 'flex-start',
-    },
-
-    detailLeft: {
-      display: 'flex',
-      flexDirection: 'column',
-    },
-
-    image: {
-      width: 'clamp(100px, 150px, 150px)',
-    },
-  };
-});
+import FullScreenLoader from '../../../components/FullscreenLoader';
+import PodcastHeader from '../../../components/podcastHeader';
+import PodcastDetails from '../../../components/podcastDetails';
 
 const fetcher = async (apiAddress: any) => {
   const data = await axios.get(`http://localhost:3001${apiAddress}`);
@@ -52,8 +21,6 @@ const PodcastDetail: NextPage = () => {
   const { id } = router.query;
   const { data, error } = useSWR(id ? `/api/podcast/${id}` : null, fetcher);
   const [deleting, setDeleting] = useState(false);
-
-  const { classes } = useStyles();
 
   const form = useForm({
     initialValues: {
@@ -76,81 +43,19 @@ const PodcastDetail: NextPage = () => {
   };
 
   if (error) return <div>failed to load</div>;
-  if (!data)
-    return (
-      <Container className={classes.wrapper}>
-        <Loader></Loader>
-      </Container>
-    );
+  if (!data) return <FullScreenLoader />;
 
+  console.log(data);
   return (
     <>
-      <Card shadow='md'>
-        <Container className={classes.wrapper}>
-          <Group align='flex-start'>
-            <Title order={1}>
-              <Text size='sm'>{data.title}</Text>
-            </Title>
-            {data.image ? (
-              <Image
-                className={classes.image}
-                src={data.image.url}
-                alt={data.image.title}></Image>
-            ) : (
-              <Skeleton animate={false} className={classes.image} />
-            )}
-          </Group>
-          <Container mt='l'>
-            {data.description ? (
-              <Spoiler maxHeight={120} showLabel='more...' hideLabel='hide'>
-                <Text>{data.description}</Text>
-              </Spoiler>
-            ) : null}
-          </Container>
-        </Container>
-        <Container my='lg'>
-          <Group direction='column' spacing='xs'>
-            <Text>
-              Link: <Anchor href={data.link}>{data.link}</Anchor>
-            </Text>
-            <Text>{data.copyright}</Text>
-          </Group>
-        </Container>
-        <form onSubmit={form.onSubmit(handleSubmit)}>
-          {!deleting ? (
-            <Button type='submit'>Delete</Button>
-          ) : (
-            <Loader></Loader>
-          )}
-        </form>
-
-        <Group align='flex-start'>
-          <Text>Episodes:</Text>
-          {
-            <ul>
-              {data.episodes
-                ? data.episodes.map((episode) => {
-                    return (
-                      <li key={episode.guid}>
-                        <Anchor href={`/admin${episode.url}`}>
-                          {episode.title}
-                        </Anchor>
-                        <Text>
-                          {episode.pubDate
-                            ? `Published: ${format(
-                                new Date(episode.pubDate),
-                                'MMM dd yyyy'
-                              )}`
-                            : ''}
-                        </Text>
-                      </li>
-                    );
-                  })
-                : null}
-            </ul>
-          }
-        </Group>
-      </Card>
+      <PodcastHeader
+        image={data.image?.url}
+        imageAlt={data.image?.title}
+        author={data.author}
+        title={data.title}
+        link={data.link}
+      />
+      <PodcastDetails description={data.description} episodes={data.episodes} />
     </>
   );
 };

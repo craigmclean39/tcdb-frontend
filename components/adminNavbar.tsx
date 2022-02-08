@@ -1,6 +1,7 @@
 import { Anchor, Button, Navbar, NavbarProps, Loader } from '@mantine/core';
 import axios from 'axios';
 import { useState } from 'react';
+import SearchBar from './searchBar';
 
 function AdminNavbar(props: Omit<NavbarProps, 'children'>) {
   const handleClick = async () => {
@@ -13,6 +14,9 @@ function AdminNavbar(props: Omit<NavbarProps, 'children'>) {
 
   return (
     <Navbar {...props}>
+      <Navbar.Section>
+        <SearchBar />
+      </Navbar.Section>
       <Navbar.Section>
         <Anchor href='/admin/podcast_create'>Add Podcast</Anchor>
       </Navbar.Section>
