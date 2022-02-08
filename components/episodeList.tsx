@@ -1,5 +1,6 @@
-import { Group, Title, Text, Anchor } from '@mantine/core';
+import { Group, Title, Text, Divider } from '@mantine/core';
 import { Episode } from '../types/podcast';
+import EpisodeCard from './episodeCard';
 
 interface EpisodeListProps {
   episodes: Episode[];
@@ -27,12 +28,9 @@ const EpisodeList: React.FC<EpisodeListProps> = ({ episodes }) => {
           flexDirection: 'column',
           alignItems: 'flex-start',
         }}>
+        <Divider sx={{ width: '100%' }} mb='xl' />
         {episodes.map((episode) => {
-          return (
-            <Anchor href={`/admin/${episode.url}`} key={episode.guid}>
-              {episode.title}
-            </Anchor>
-          );
+          return <EpisodeCard episode={episode} key={episode.guid} />;
         })}
       </Group>
     </div>

@@ -12,7 +12,7 @@ const useStyles = createStyles((theme, _params, getRef) => {
   return {
     grid: {
       display: 'grid',
-      gridTemplateColumns: '1fr 2fr',
+      gridTemplateColumns: '2fr 5fr',
     },
   };
 });
@@ -42,7 +42,7 @@ const PodcastHeader: React.FC<PodcastHeaderProps> = ({
         mx='xl'
         position='left'
         sx={{ height: '100%', justifyContent: 'space-between' }}>
-        <Group direction='column' spacing='xs'>
+        <Group direction='column'>
           <Text weight={700} mt='xl'>
             {author}
           </Text>
