@@ -1,13 +1,20 @@
 import type { NextPage } from 'next';
-import { AppShell } from '@mantine/core';
+import { AppShell, ColorScheme } from '@mantine/core';
 import AdminHeader from './adminHeader';
 import AdminNavbar from './adminNavbar';
 
-const AdminLayout: NextPage = ({ children }) => {
+interface AdminLayoutProps {
+  toggleColorScheme?: (value?: ColorScheme) => void;
+}
+
+const AdminLayout: NextPage<AdminLayoutProps> = ({
+  children,
+  toggleColorScheme,
+}) => {
   return (
     <AppShell
       navbar={<AdminNavbar width={{ base: 300 }} height={500} padding='xs' />}
-      header={<AdminHeader height={70} padding='xs' />}>
+      header={<AdminHeader toggleColorScheme={toggleColorScheme} />}>
       {children}
     </AppShell>
   );
