@@ -14,11 +14,19 @@ const useStyles = createStyles((theme, _params, getRef) => {
 interface PodcastDetailsProps {
   description?: string;
   episodes?: Episode[];
+  episodeCount?: number;
+  page: number;
+  setPage: any;
+  pageTotal: number;
 }
 
 const PodcastDetails: React.FC<PodcastDetailsProps> = ({
   description,
   episodes,
+  episodeCount,
+  page,
+  setPage,
+  pageTotal,
 }) => {
   const { classes } = useStyles();
 
@@ -32,7 +40,17 @@ const PodcastDetails: React.FC<PodcastDetailsProps> = ({
         mt='xl'>
         <Text size='sm'>{description}</Text>
       </Spoiler>
-      {episodes ? <EpisodeList episodes={episodes} /> : <></>}
+      {episodes ? (
+        <EpisodeList
+          episodes={episodes}
+          episodeCount={episodeCount ? episodeCount : 0}
+          page={page}
+          setPage={setPage}
+          pageTotal={pageTotal}
+        />
+      ) : (
+        <></>
+      )}
     </div>
   );
 };

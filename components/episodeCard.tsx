@@ -23,9 +23,7 @@ const EpisodeCard: React.FC<EpisodeCardProps> = ({ episode }) => {
           : false
       ) {
         setIsNew(true);
-        console.log('New');
       }
-      console.log(duration);
     }
   }, [episode.isoDate]);
 
