@@ -4,19 +4,26 @@ import useSWR from 'swr';
 import { useRouter } from 'next/router';
 import { Container, Loader, Card } from '@mantine/core';
 import { Episode } from '../../../types/podcast';
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 
-const fetcher = async (apiAddress: any) => {
-  const data = await axios.get(`http://localhost:3001${apiAddress}`);
-  return data.data as Episode;
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { id } = context.query;
+  const data = await axios.get(`http://localhost:3001/api/episode/${id}`, {});
+
+  return {
+    props: {
+      episode: data.data,
+    },
+  };
 };
 
-const EpisodeDetail: NextPage = () => {
+const EpisodeDetail: NextPage = ({
+  episode,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const router = useRouter();
   const { id } = router.query;
-  const { data, error } = useSWR(id ? `/api/episode/${id}` : null, fetcher);
 
-  if (error) return <div>failed to load</div>;
-  if (!data)
+  if (!episode)
     return (
       <Container>
         <Loader></Loader>
@@ -25,7 +32,7 @@ const EpisodeDetail: NextPage = () => {
 
   return (
     <>
-      <Card shadow='md'>{data.title}</Card>
+      <Card shadow='md'>{episode.title}</Card>
     </>
   );
 };
