@@ -13,7 +13,14 @@ const AdminLayout: NextPage<AdminLayoutProps> = ({
 }) => {
   return (
     <AppShell
-      navbar={<AdminNavbar width={{ base: 300 }} height={500} padding='xs' />}
+      navbar={
+        <AdminNavbar
+          width={{ base: 300 }}
+          sx={{ minWidth: 300 }}
+          height={500}
+          padding='xs'
+        />
+      }
       header={<AdminHeader toggleColorScheme={toggleColorScheme} />}>
       {children}
     </AppShell>

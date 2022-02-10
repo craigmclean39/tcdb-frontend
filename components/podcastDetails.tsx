@@ -7,6 +7,17 @@ const useStyles = createStyles((theme, _params, getRef) => {
     grid: {
       display: 'grid',
       gridTemplateColumns: '2fr 5fr',
+      maxWidth: '100%',
+    },
+    left: {
+      minWidth: '100%',
+      maxWidth: '100%',
+      gridColumnStart: 1,
+    },
+    right: {
+      minWidth: '100%',
+      maxWidth: '100%',
+      gridColumnStart: 2,
     },
   };
 });
@@ -32,22 +43,26 @@ const PodcastDetails: React.FC<PodcastDetailsProps> = ({
 
   return (
     <div className={classes.grid}>
-      <Spoiler
-        maxHeight={200}
-        showLabel='more...'
-        hideLabel='hide.'
-        mx='xl'
-        mt='xl'>
-        <Text size='sm'>{description}</Text>
-      </Spoiler>
+      <div className={classes.left}>
+        <Spoiler
+          maxHeight={200}
+          showLabel='more...'
+          hideLabel='hide.'
+          mx='xl'
+          mt='xl'>
+          <Text size='sm'>{description}</Text>
+        </Spoiler>
+      </div>
       {episodes ? (
-        <EpisodeList
-          episodes={episodes}
-          episodeCount={episodeCount ? episodeCount : 0}
-          page={page}
-          setPage={setPage}
-          pageTotal={pageTotal}
-        />
+        <div className={classes.right}>
+          <EpisodeList
+            episodes={episodes}
+            episodeCount={episodeCount ? episodeCount : 0}
+            page={page}
+            setPage={setPage}
+            pageTotal={pageTotal}
+          />
+        </div>
       ) : (
         <></>
       )}
