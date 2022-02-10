@@ -1,10 +1,12 @@
 import type { NextPage } from 'next';
 import axios from 'axios';
 import { useRouter } from 'next/router';
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import PodcastHeader from '../../../components/podcastHeader';
 import PodcastDetails from '../../../components/podcastDetails';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import usePagination from '../../../hooks/usePagination';
+import useEffectAfterFirstUpdate from '../../../hooks/useEffectAfterFirstUpdate';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { id } = context.query;
@@ -32,23 +34,13 @@ const PodcastDetail: NextPage = ({
   episodes,
   episodeCount,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(20);
+  const { page, setPage, limit, setLimit } = usePagination();
   const [episodeData, setEpisodeData] = useState(episodes);
-  const firstUpdate = useRef(true);
 
-  console.log(episodes);
   const router = useRouter();
   const { id } = router.query;
 
-  // Initial Episodes are pre-populated into props from GetServerSideProps
-  // So we do not want to refetch on useEffect after mounting
-  useEffect(() => {
-    if (firstUpdate.current) {
-      firstUpdate.current = false;
-      return;
-    }
-
+  function fetchEpisodes() {
     async function getEpisodes() {
       const episodeData = await axios.get(
         `http://localhost:3001/api/podcast/${id}/episodes`,
@@ -61,7 +53,9 @@ const PodcastDetail: NextPage = ({
     }
 
     getEpisodes();
-  }, [page, id, limit]);
+  }
+
+  useEffectAfterFirstUpdate(fetchEpisodes, [page, id, limit]);
 
   /* 
   const [deleting, setDeleting] = useState(false);
