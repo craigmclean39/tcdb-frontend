@@ -1,20 +1,25 @@
 import type { NextPage } from 'next';
 import axios from 'axios';
-import useSWR from 'swr';
 import { Anchor } from '@mantine/core';
 import { Podcast } from '../../types/podcast';
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 
-const fetcher = async (apiAddress: any) => {
-  const data = await axios.get(`http://localhost:3001${apiAddress}`);
-  return data;
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const data = await axios.get(`http://localhost:3001/api/podcasts`, {});
+
+  return {
+    props: {
+      podcasts: data.data,
+    },
+  };
 };
 
-const Podcasts: NextPage = ({ children }) => {
-  const { data, error } = useSWR('/api/podcasts', fetcher);
-
+const Podcasts: NextPage = ({
+  podcasts,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   let elements = [];
-  if (data) {
-    elements = data.data.map((podcast: Podcast) => {
+  if (podcasts) {
+    elements = podcasts.map((podcast: Podcast) => {
       return (
         <li key={podcast.title}>
           <Anchor href={`/admin${podcast.url}`}>{podcast.title}</Anchor>
@@ -23,18 +28,13 @@ const Podcasts: NextPage = ({ children }) => {
     });
   }
 
-  if (error) {
-    return <div> Error</div>;
-  }
-
-  if (!data) {
+  if (!podcasts) {
     return <></>;
   }
 
   return (
     <>
       <h1>Podcasts</h1>
-
       <ul>{elements}</ul>
     </>
   );
