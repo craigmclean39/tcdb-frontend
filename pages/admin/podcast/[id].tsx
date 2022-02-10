@@ -7,6 +7,7 @@ import PodcastDetails from '../../../components/podcastDetails';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import usePagination from '../../../hooks/usePagination';
 import useEffectAfterFirstUpdate from '../../../hooks/useEffectAfterFirstUpdate';
+import HtmlHead from '../../../components/htmlHead';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { id } = context.query;
@@ -80,6 +81,7 @@ const PodcastDetail: NextPage = ({
 
   return (
     <>
+      <HtmlHead title={podcast.title} description={podcast.description} />
       <PodcastHeader
         image={podcast.image?.url}
         imageAlt={podcast.image?.title}
