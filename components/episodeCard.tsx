@@ -1,7 +1,15 @@
 import { useEffect, useState } from 'react';
 import { Episode } from '../types/podcast';
 import { intervalToDuration, format } from 'date-fns';
-import { Anchor, Badge, Spoiler, Title, Text, Card } from '@mantine/core';
+import {
+  Anchor,
+  Badge,
+  Spoiler,
+  Title,
+  Text,
+  Card,
+  Group,
+} from '@mantine/core';
 
 interface EpisodeCardProps {
   episode: Episode;
@@ -29,7 +37,16 @@ const EpisodeCard: React.FC<EpisodeCardProps> = ({ episode }) => {
 
   return (
     <Card sx={{ width: '100%' }} shadow='lg'>
-      {isNew ? <Badge>New</Badge> : <></>}
+      <Group mb='xs'>
+        {isNew ? <Badge>New</Badge> : <></>}
+        {episode.season != -1 ? (
+          <Badge
+            sx={(theme) => ({
+              backgroundColor:
+                theme.colors.red[episode.season ? episode.season + 5 : 0],
+            })}>{`Season ${episode.season}`}</Badge>
+        ) : null}
+      </Group>
       <Title order={3}>
         <Anchor
           href={`${episode.url}`}
@@ -39,7 +56,7 @@ const EpisodeCard: React.FC<EpisodeCardProps> = ({ episode }) => {
           {episode.title}
         </Anchor>
       </Title>
-      <Spoiler maxHeight={80} hideLabel='hide.' showLabel='more...'>
+      <Spoiler maxHeight={88} hideLabel='hide.' showLabel='more...'>
         <Text weight={300} size='sm'>
           {episode.contentSnippet}
         </Text>
