@@ -42,7 +42,7 @@ const PodcastDetail: NextPage = ({
   const router = useRouter();
   const { id } = router.query;
 
-  function fetchEpisodes() {
+  useEffectAfterFirstUpdate(() => {
     async function getEpisodes() {
       const episodeData = await axios.get(
         `http://localhost:3001/api/podcast/${id}/episodes`,
@@ -55,9 +55,7 @@ const PodcastDetail: NextPage = ({
     }
 
     getEpisodes();
-  }
-
-  useEffectAfterFirstUpdate(fetchEpisodes, [page, id, limit]);
+  }, [page, id, limit]);
 
   return (
     <Layout>
