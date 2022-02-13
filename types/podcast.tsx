@@ -35,4 +35,6 @@ export interface Episode {
   duration?: string;
   season?: number;
   url?: string;
+
+  podcast?: Podcast;
 }
