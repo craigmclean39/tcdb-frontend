@@ -2,8 +2,8 @@ import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
 import axios from 'axios';
-import SearchResult from '../../components/searchResult';
-import AdminLayout from '../../components/adminLayout';
+import SearchResult from '../components/searchResult';
+import Layout from '../components/layout';
 
 const fetcher = async (query: string) => {
   const data = await axios.post(`http://localhost:3001/api/search`, {
@@ -39,7 +39,7 @@ const SearchResults: NextPage = ({ children }) => {
   }
 
   return (
-    <AdminLayout>
+    <Layout>
       <h1>Search Results</h1>
       <h2>{router.query.search}</h2>
       {data ? (
@@ -51,7 +51,7 @@ const SearchResults: NextPage = ({ children }) => {
       ) : (
         ''
       )}
-    </AdminLayout>
+    </Layout>
   );
 };
 

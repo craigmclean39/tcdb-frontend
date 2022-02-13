@@ -46,7 +46,7 @@ const SearchResult: React.FC<SearchResultProps> = (props) => {
 
   return (
     <li>
-      <Anchor href={`/admin${data.url}`}>{data.title}</Anchor>
+      <Anchor href={`${data.url}`}>{data.title}</Anchor>
     </li>
   );
 };

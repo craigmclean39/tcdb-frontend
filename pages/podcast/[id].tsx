@@ -2,13 +2,13 @@ import type { NextPage } from 'next';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import PodcastHeader from '../../../components/podcastHeader';
-import PodcastDetails from '../../../components/podcastDetails';
+import PodcastHeader from '../../components/podcastHeader';
+import PodcastDetails from '../../components/podcastDetails';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
-import usePagination from '../../../hooks/usePagination';
-import useEffectAfterFirstUpdate from '../../../hooks/useEffectAfterFirstUpdate';
-import HtmlHead from '../../../components/htmlHead';
-import AdminLayout from '../../../components/adminLayout';
+import usePagination from '../../hooks/usePagination';
+import useEffectAfterFirstUpdate from '../../hooks/useEffectAfterFirstUpdate';
+import HtmlHead from '../../components/htmlHead';
+import Layout from '../../components/layout';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { id } = context.query;
@@ -60,7 +60,7 @@ const PodcastDetail: NextPage = ({
   useEffectAfterFirstUpdate(fetchEpisodes, [page, id, limit]);
 
   return (
-    <AdminLayout>
+    <Layout>
       <HtmlHead title={podcast.title} description={podcast.description} />
       <PodcastHeader
         image={podcast.image?.url}
@@ -77,7 +77,7 @@ const PodcastDetail: NextPage = ({
         setPage={setPage}
         pageTotal={Math.ceil(episodeCount / limit)}
       />
-    </AdminLayout>
+    </Layout>
   );
 };
 

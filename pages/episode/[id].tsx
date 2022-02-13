@@ -1,9 +1,9 @@
 import type { NextPage } from 'next';
 import axios from 'axios';
 import { Container, Loader, Card, Anchor } from '@mantine/core';
-import { Episode, Podcast } from '../../../types/podcast';
+import { Episode, Podcast } from '../../types/podcast';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
-import AdminLayout from '../../../components/adminLayout';
+import Layout from '../../components/layout';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { id } = context.query;
@@ -33,13 +33,13 @@ const EpisodeDetail: NextPage = ({
     );
 
   return (
-    <AdminLayout>
+    <Layout>
       <Card shadow='md'>
         <h1>{`${podcast.title}: ${episode.title}`}</h1>
         <p>{episode.content}</p>
         <Anchor href={episode.mediaUrl}>Media Link</Anchor>
       </Card>
-    </AdminLayout>
+    </Layout>
   );
 };
 

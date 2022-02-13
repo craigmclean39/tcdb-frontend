@@ -2,7 +2,7 @@ import type { NextPage } from 'next';
 import AdminLayout from '../components/adminLayout';
 
 const Admin: NextPage = ({ children }) => {
-  return <>Root</>;
+  return <AdminLayout>Root</AdminLayout>;
 };
 
 export default Admin;
