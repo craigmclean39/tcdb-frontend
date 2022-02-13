@@ -1,9 +1,10 @@
 import type { NextPage } from 'next';
 import axios from 'axios';
-import { Anchor } from '@mantine/core';
 import { Podcast } from '../types/podcast';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import Layout from '../components/layout';
+import PodcastListElement from '../components/podcastListElement';
+import { Text } from '@mantine/core';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const data = await axios.get(`http://localhost:3001/api/podcasts`, {});
@@ -22,21 +23,28 @@ const Podcasts: NextPage = ({
   if (podcasts) {
     elements = podcasts.map((podcast: Podcast) => {
       return (
-        <li key={podcast.title}>
-          <Anchor href={`${podcast.url}`}>{podcast.title}</Anchor>
-        </li>
+        <PodcastListElement
+          key={podcast.title}
+          title={podcast.title}
+          url={podcast.url}
+          image={podcast.image?.url}
+        />
       );
     });
   }
 
-  if (!podcasts) {
-    return <></>;
-  }
-
   return (
     <Layout>
-      <h1>Podcasts</h1>
-      <ul>{elements}</ul>
+      <Text
+        component='h2'
+        variant='gradient'
+        size='xl'
+        weight='800'
+        transform='uppercase'>
+        Podcasts
+      </Text>
+
+      <ul style={{ listStyleType: 'none', padding: 0 }}>{elements}</ul>
     </Layout>
   );
 };

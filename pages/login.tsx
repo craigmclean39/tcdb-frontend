@@ -19,7 +19,7 @@ const Login: NextPage = () => {
     try {
       await axios.post('http://localhost:3001/login', values);
       //SUCCESS
-      Router.push('/admin/podcasts');
+      Router.push('/podcasts');
     } catch (err) {
       console.log('Failure');
       console.dir(err);

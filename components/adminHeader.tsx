@@ -3,6 +3,7 @@ import {
   ColorScheme,
   useMantineTheme,
   ActionIcon,
+  Title,
 } from '@mantine/core';
 
 import { MdDarkMode } from 'react-icons/md';
@@ -17,7 +18,7 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({ toggleColorScheme }) => {
 
   return (
     <Header height={70}>
-      True Crime Podcast Database
+      <Title order={1}>True Crime Podcast Database</Title>
       <ActionIcon
         variant='outline'
         color={theme.colorScheme === 'dark' ? 'yellow' : 'blue'}
