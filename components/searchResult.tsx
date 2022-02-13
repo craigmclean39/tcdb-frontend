@@ -1,54 +1,95 @@
-import { Anchor } from '@mantine/core';
+import { Anchor, Highlight, Group, createStyles, Badge } from '@mantine/core';
 import axios from 'axios';
-import useSWR from 'swr';
+import { useEffect, useState } from 'react';
 import { Podcast, Episode } from '../types/podcast';
 
-const fetcher = async (props: SearchResultProps) => {
-  switch (props.type) {
-    case 'podcasts': {
-      const data = await axios.get(
-        `http://localhost:3001/api/podcast/${props.id}`
-      );
-
-      return data.data as Podcast;
-    }
-    case 'episodes': {
-      const data = await axios.get(
-        `http://localhost:3001/api/episode/${props.id}`
-      );
-
-      return data.data as Episode;
-    }
-    default: {
-      return;
-    }
-  }
-};
+const useStyles = createStyles((theme, _params, getRef) => {
+  return {
+    resultsWrapper: {
+      width: '50%',
+    },
+    result: {
+      marginBottom: theme.spacing.xl,
+    },
+  };
+});
 
 interface SearchResultProps {
   id: string;
   type: string;
+  query: string | string[];
 }
 
-const SearchResult: React.FC<SearchResultProps> = (props) => {
-  const { data, error } = useSWR(props, fetcher, {
-    revalidateOnFocus: false,
-    revalidateOnMount: true,
-    revalidateOnReconnect: false,
-    refreshWhenOffline: false,
-    refreshWhenHidden: false,
-    refreshInterval: 0,
-  });
+const SearchResult: React.FC<SearchResultProps> = ({ id, type, query }) => {
+  const [data, setData] = useState<Podcast | Episode | undefined>();
+  const [content, setContent] = useState('');
+
+  const { classes } = useStyles();
+
+  useEffect(() => {
+    async function getData() {
+      switch (type) {
+        case 'podcasts': {
+          const data = await axios.get(
+            `http://localhost:3001/api/podcast/${id}`
+          );
+
+          setData(data.data);
+          setContent(data.data.description);
+          break;
+        }
+        case 'episodes': {
+          const data = await axios.get(
+            `http://localhost:3001/api/episode/${id}`
+          );
+
+          setData(data.data);
+          setContent(data.data.content);
+          break;
+        }
+        default: {
+          return;
+        }
+      }
+    }
+
+    getData();
+  }, [id, type]);
 
   if (!data) {
     return <></>;
   }
 
   return (
-    <li>
-      <Anchor href={`${data.url}`}>{data.title}</Anchor>
+    <li className={classes.result}>
+      <Group className={classes.resultsWrapper} mb='xl' spacing='xs'>
+        <Anchor href={`${data.url}`}>{data.title}</Anchor>
+        <Badge size='xs' color={type === 'podcasts' ? 'green' : 'red'}>
+          {type === 'podcasts' ? 'Podcast' : 'Episode'}
+        </Badge>
+        <Highlight
+          size='sm'
+          className={classes.result}
+          highlight={query}
+          highlightStyles={(theme) => ({
+            backgroundImage: theme.fn.linearGradient(
+              45,
+              theme.colors.cyan[5],
+              theme.colors.indigo[5]
+            ),
+            fontWeight: 600,
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+          })}>
+          {`${truncate(content, 50)} ...`}
+        </Highlight>
+      </Group>
     </li>
   );
 };
+
+function truncate(str: string, no_words: number) {
+  return str.split(' ').splice(0, no_words).join(' ');
+}
 
 export default SearchResult;

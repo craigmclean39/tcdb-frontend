@@ -21,7 +21,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         theme={{
           colorScheme: colorScheme,
           fontFamily: 'Open Sans',
-          primaryColor: 'gray',
+          primaryColor: 'blue',
         }}>
         <>
           <Component {...pageProps} />

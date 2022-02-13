@@ -24,7 +24,7 @@ const PodcastListElement: React.FC<PodcastListElementProps> = ({
   const { classes } = useStyles();
 
   return (
-    <li className=''>
+    <li>
       <Card className={classes.card}>
         <Image src={image} alt='' width={64} />
 
