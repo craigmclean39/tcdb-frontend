@@ -1,9 +1,7 @@
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';
-import AdminLayout from '../components/adminLayout';
 import { MantineProvider, ColorScheme } from '@mantine/core';
 import { useState } from 'react';
-import Head from 'next/head';
 import HtmlHead from '../components/htmlHead';
 
 function MyApp({ Component, pageProps }: AppProps) {

@@ -63,7 +63,23 @@ const SearchResult: React.FC<SearchResultProps> = ({ id, type, query }) => {
   return (
     <li className={classes.result}>
       <Group className={classes.resultsWrapper} mb='xl' spacing='xs'>
-        <Anchor href={`${data.url}`}>{data.title}</Anchor>
+        <Highlight
+          href={`${data.url}`}
+          highlight={query}
+          component='a'
+          color='blue'
+          highlightStyles={(theme) => ({
+            backgroundImage: theme.fn.linearGradient(
+              45,
+              theme.colors.cyan[5],
+              theme.colors.indigo[5]
+            ),
+            fontWeight: 900,
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+          })}>
+          {data.title}
+        </Highlight>
         <Badge size='xs' color={type === 'podcasts' ? 'green' : 'red'}>
           {type === 'podcasts' ? 'Podcast' : 'Episode'}
         </Badge>

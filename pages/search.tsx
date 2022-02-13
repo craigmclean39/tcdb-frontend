@@ -5,6 +5,7 @@ import axios from 'axios';
 import SearchResult from '../components/searchResult';
 import Layout from '../components/layout';
 import { Highlight } from '@mantine/core';
+import { useEffect, useState } from 'react';
 
 const fetcher = async (query: string) => {
   const data = await axios.post(`http://localhost:3001/api/search`, {
@@ -14,6 +15,8 @@ const fetcher = async (query: string) => {
 };
 
 const SearchResults: NextPage = ({ children }) => {
+  const [query, setQuery] = useState('');
+
   const router = useRouter();
   const { data, error } = useSWR(
     router.query.search ? router.query.search : null,
@@ -28,6 +31,14 @@ const SearchResults: NextPage = ({ children }) => {
     }
   );
 
+  useEffect(() => {
+    if (Array.isArray(router.query.search)) {
+      setQuery(router.query.search[0]);
+    } else {
+      setQuery(router.query.search as string);
+    }
+  }, [router.query.search]);
+
   let searchResults = [];
   if (data) {
     if (data.hits.length > 0) {
@@ -37,13 +48,13 @@ const SearchResults: NextPage = ({ children }) => {
             key={result.id}
             type={result.type}
             id={result.id}
-            query={router.query.search ? router.query.search.split(' ') : ''}
+            query={query ? query.split(' ') : ''}
           />
         );
       });
     }
   }
-  router.query.search;
+
   return (
     <Layout>
       <h2>
