@@ -32,7 +32,7 @@ const EpisodeCard: React.FC<EpisodeCardProps> = ({ episode }) => {
       {isNew ? <Badge>New</Badge> : <></>}
       <Title order={3}>
         <Anchor
-          href={`/admin/${episode.url}`}
+          href={`${episode.url}`}
           key={episode.guid}
           size='xl'
           variant='text'>
