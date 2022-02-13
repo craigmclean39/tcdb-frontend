@@ -1,6 +1,7 @@
 import { Group, Title, Text, Divider, Pagination } from '@mantine/core';
-import { Episode } from '../types/podcast';
 import EpisodeCard from './episodeCard';
+import { useScrollIntoView } from '@mantine/hooks';
+import { Episode } from '../types/podcast';
 
 interface EpisodeListProps {
   episodes: Episode[];
@@ -17,6 +18,8 @@ const EpisodeList: React.FC<EpisodeListProps> = ({
   setPage,
   pageTotal,
 }) => {
+  const { scrollIntoView, targetRef } = useScrollIntoView();
+
   return (
     <div>
       <Group
@@ -38,11 +41,21 @@ const EpisodeList: React.FC<EpisodeListProps> = ({
           flexDirection: 'column',
           alignItems: 'flex-start',
         }}>
+        <div ref={targetRef}></div>
         <Pagination page={page} onChange={setPage} total={pageTotal} />
         <Divider sx={{ width: '100%' }} mb='xl' />
         {episodes.map((episode) => {
           return <EpisodeCard episode={episode} key={episode.guid} />;
         })}
+        <Divider sx={{ width: '100%' }} mt='xl' />
+        <Pagination
+          page={page}
+          onChange={(value) => {
+            scrollIntoView({ alignment: 'center' });
+            setPage(value);
+          }}
+          total={pageTotal}
+        />
       </Group>
     </div>
   );

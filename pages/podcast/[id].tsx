@@ -17,7 +17,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const episodeData = await axios.get(
     `http://localhost:3001/api/podcast/${id}/episodes`,
     {
-      params: { limit: 20, offset: 0 },
+      params: { limit: 10, offset: 0 },
     }
   );
 
@@ -36,7 +36,7 @@ const PodcastDetail: NextPage = ({
   episodes,
   episodeCount,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const { page, setPage, limit, setLimit } = usePagination();
+  const { page, setPage, limit, setLimit } = usePagination(10);
   const [episodeData, setEpisodeData] = useState(episodes);
 
   const router = useRouter();
@@ -47,7 +47,7 @@ const PodcastDetail: NextPage = ({
       const episodeData = await axios.get(
         `http://localhost:3001/api/podcast/${id}/episodes`,
         {
-          params: { limit: 20, offset: (page - 1) * limit },
+          params: { limit: limit, offset: (page - 1) * limit },
         }
       );
 

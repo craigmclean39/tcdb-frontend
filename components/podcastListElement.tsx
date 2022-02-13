@@ -26,7 +26,7 @@ const PodcastListElement: React.FC<PodcastListElementProps> = ({
   return (
     <li>
       <Card className={classes.card}>
-        <Image src={image} alt='' width={64} />
+        <Image src={image} alt='' width={64} height={64} />
 
         <Anchor variant='text' href={url} mx='lg'>
           {title}

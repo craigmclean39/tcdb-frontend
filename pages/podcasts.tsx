@@ -8,10 +8,11 @@ import { Text, Pagination } from '@mantine/core';
 import usePagination from '../hooks/usePagination';
 import useEffectAfterFirstUpdate from '../hooks/useEffectAfterFirstUpdate';
 import { useState } from 'react';
+import { useScrollIntoView } from '@mantine/hooks';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const data = await axios.get(`http://localhost:3001/api/podcasts`, {
-    params: { limit: 12, offset: 0 },
+    params: { limit: 10, offset: 0 },
   });
 
   console.log(Number(data.headers['x-total-count']));
@@ -28,14 +29,15 @@ const Podcasts: NextPage = ({
   podcastCount,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const [podcastsData, setPodcastsData] = useState(podcasts);
-  const { page, setPage, limit, setLimit } = usePagination();
+  const { page, setPage, limit, setLimit } = usePagination(10);
+  const { scrollIntoView, targetRef } = useScrollIntoView();
 
   useEffectAfterFirstUpdate(() => {
     async function getPodcasts() {
       const episodeData = await axios.get(
         `http://localhost:3001/api/podcasts`,
         {
-          params: { limit: 20, offset: (page - 1) * limit },
+          params: { limit: limit, offset: (page - 1) * limit },
         }
       );
 
@@ -62,6 +64,7 @@ const Podcasts: NextPage = ({
   return (
     <Layout>
       <Text
+        ref={targetRef}
         component='h2'
         variant='gradient'
         size='xl'
@@ -76,6 +79,14 @@ const Podcasts: NextPage = ({
         total={Math.ceil(podcastCount / limit)}
       />
       <ul style={{ listStyleType: 'none', padding: 0 }}>{elements}</ul>
+      <Pagination
+        page={page}
+        onChange={(value) => {
+          scrollIntoView({ alignment: 'center' });
+          setPage(value);
+        }}
+        total={Math.ceil(podcastCount / limit)}
+      />
     </Layout>
   );
 };
