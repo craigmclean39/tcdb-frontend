@@ -34,7 +34,7 @@ const Admin: NextPage = ({
       setAdding(true);
       await axios.post(`${server}/api/podcast/create`, values);
       //SUCCESS
-      Router.push('/admin/podcasts');
+      Router.push('/podcasts');
     } catch (err) {
       setAdding(false);
       setServerError('Error');
