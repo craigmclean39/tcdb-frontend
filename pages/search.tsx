@@ -12,8 +12,18 @@ import SearchHits from '../types/searchHits';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { search } = context.query;
+
+  let query = '';
+  if (Array.isArray(search)) {
+    query = search[0];
+  } else {
+    query = search as string;
+  }
+
   return {
     props: {
+      query: query,
       server: config.NEXT_PUBLIC_SERVER_ADDRESS,
     },
   };
@@ -22,14 +32,16 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 const SearchResults: NextPage = ({
   children,
   server,
+  query,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const [query, setQuery] = useState('');
-
   const router = useRouter();
   const [data, setData] = useState<SearchHits>({ hits: [] });
 
   useEffect(() => {
     const doSearch = async () => {
+      if (query === '') {
+        return;
+      }
       try {
         const data = await axios.post(`${server}/api/search`, {
           search: query,
@@ -41,14 +53,6 @@ const SearchResults: NextPage = ({
 
     doSearch();
   }, [query, server]);
-
-  useEffect(() => {
-    if (Array.isArray(router.query.search)) {
-      setQuery(router.query.search[0]);
-    } else {
-      setQuery(router.query.search as string);
-    }
-  }, [router.query.search]);
 
   let searchResults: {} | null | undefined = [];
   if (data) {
