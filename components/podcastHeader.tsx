@@ -8,7 +8,7 @@ import {
   Anchor,
 } from '@mantine/core';
 
-import { useMediaQuery } from '@mantine/hooks';
+import { useMediaQuery } from '../hooks/useMediaQuery';
 
 const useStyles = createStyles((theme, _params, getRef) => {
   return {

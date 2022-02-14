@@ -1,7 +1,7 @@
 import { createStyles, Spoiler, Text } from '@mantine/core';
 import { Episode } from '../types/podcast';
 import EpisodeList from './episodeList';
-import { useMediaQuery } from '@mantine/hooks';
+import { useMediaQuery } from '../hooks/useMediaQuery';
 
 const useStyles = createStyles((theme, _params, getRef) => {
   return {
@@ -46,10 +46,10 @@ const PodcastDetails: React.FC<PodcastDetailsProps> = ({
   pageTotal,
 }) => {
   const { classes } = useStyles();
-  const matches = useMediaQuery('(min-width: 1100px)');
+  const small = useMediaQuery('(max-width: 1100px)');
 
   return (
-    <div className={matches ? classes.grid : classes.flex}>
+    <div className={!small ? classes.grid : classes.flex}>
       <div className={classes.left}>
         <Spoiler
           maxHeight={200}
