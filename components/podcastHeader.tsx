@@ -46,16 +46,16 @@ const PodcastHeader: React.FC<PodcastHeaderProps> = ({
 }) => {
   const { classes } = useStyles();
   const matches = useMediaQuery('(min-width: 1100px)');
-  const small = useMediaQuery('(max-width: 800px)');
+  const large = useMediaQuery('(min-width: 800px)');
 
   return (
-    <header className={small ? classes.small : classes.grid}>
+    <header className={!large ? classes.small : classes.grid}>
       <Image
         alt={imageAlt}
         src={image}
         my='xl'
         mx='xl'
-        className={small ? classes.smallImage : ''}></Image>
+        className={!large ? classes.smallImage : ''}></Image>
       <Group
         direction='column'
         mx='xl'
