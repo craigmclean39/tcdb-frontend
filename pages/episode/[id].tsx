@@ -1,24 +1,21 @@
 import type { NextPage } from 'next';
 import axios from 'axios';
-import {
-  Container,
-  Loader,
-  Card,
-  Anchor,
-  Breadcrumbs,
-  Text,
-} from '@mantine/core';
+import { Container, Loader, Card, Breadcrumbs, Text } from '@mantine/core';
 import { Episode, Podcast } from '../../types/podcast';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import Layout from '../../components/layout';
 import { format } from 'date-fns';
 import ReactAudioPlayer from 'react-audio-player';
+import { config } from '../../config';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { id } = context.query;
-  const data = await axios.get(`http://localhost:3001/api/episode/${id}`, {});
+  const data = await axios.get(
+    `${config.NEXT_PUBLIC_SERVER_ADDRESS}/api/episode/${id}`,
+    {}
+  );
   const podData = await axios.get(
-    `http://localhost:3001/api/podcast/${data.data.podcast}`,
+    `${config.NEXT_PUBLIC_SERVER_ADDRESS}/api/podcast/${data.data.podcast}`,
     {}
   );
 

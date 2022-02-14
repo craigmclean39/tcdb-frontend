@@ -5,8 +5,21 @@ import axios from 'axios';
 import { useState } from 'react';
 import Router from 'next/router';
 import Layout from '../components/layout';
+import { config } from '../config';
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 
-const Admin: NextPage = ({ children }) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  return {
+    props: {
+      server: config.NEXT_PUBLIC_SERVER_ADDRESS,
+    },
+  };
+};
+
+const Admin: NextPage = ({
+  children,
+  server,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const [populating, setPopulating] = useState(false);
   const [serverError, setServerError] = useState<string>('');
   const [adding, setAdding] = useState(false);
@@ -19,7 +32,7 @@ const Admin: NextPage = ({ children }) => {
   const handleSubmit = async (values: typeof form['values']) => {
     try {
       setAdding(true);
-      await axios.post('http://localhost:3001/api/podcast/create', values);
+      await axios.post(`${server}/api/podcast/create`, values);
       //SUCCESS
       Router.push('/admin/podcasts');
     } catch (err) {
@@ -31,7 +44,7 @@ const Admin: NextPage = ({ children }) => {
 
   const handleClick = async () => {
     setPopulating(true);
-    await axios.post('http://localhost:3001/api/populate');
+    await axios.post(`${server}/api/populate`);
     setPopulating(false);
   };
 

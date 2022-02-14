@@ -1,7 +1,9 @@
-import { Anchor, Highlight, Group, createStyles, Badge } from '@mantine/core';
+import { Highlight, Group, createStyles, Badge } from '@mantine/core';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Podcast, Episode } from '../types/podcast';
+import { config } from '../config';
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 
 const useStyles = createStyles((theme, _params, getRef) => {
   return {
@@ -18,9 +20,15 @@ interface SearchResultProps {
   id: string;
   type: string;
   query: string | string[];
+  server: string;
 }
 
-const SearchResult: React.FC<SearchResultProps> = ({ id, type, query }) => {
+const SearchResult: React.FC<SearchResultProps> = ({
+  id,
+  type,
+  query,
+  server,
+}) => {
   const [data, setData] = useState<Podcast | Episode | undefined>();
   const [content, setContent] = useState('');
 
@@ -30,18 +38,14 @@ const SearchResult: React.FC<SearchResultProps> = ({ id, type, query }) => {
     async function getData() {
       switch (type) {
         case 'podcasts': {
-          const data = await axios.get(
-            `http://localhost:3001/api/podcast/${id}`
-          );
+          const data = await axios.get(`${server}/api/podcast/${id}`);
 
           setData(data.data);
           setContent(data.data.description);
           break;
         }
         case 'episodes': {
-          const data = await axios.get(
-            `http://localhost:3001/api/episode/${id}`
-          );
+          const data = await axios.get(`${server}/api/episode/${id}`);
 
           setData(data.data);
           setContent(data.data.content);
@@ -54,7 +58,7 @@ const SearchResult: React.FC<SearchResultProps> = ({ id, type, query }) => {
     }
 
     getData();
-  }, [id, type]);
+  }, [id, type, server]);
 
   if (!data) {
     return <></>;

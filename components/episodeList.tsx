@@ -41,7 +41,7 @@ const EpisodeList: React.FC<EpisodeListProps> = ({
           flexDirection: 'column',
           alignItems: 'flex-start',
         }}>
-        <div ref={targetRef}></div>
+        {/* <div ref={targetRef}></div> */}
         <Pagination page={page} onChange={setPage} total={pageTotal} />
         <Divider sx={{ width: '100%' }} mb='xl' />
         {episodes.map((episode) => {

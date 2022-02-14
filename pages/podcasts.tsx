@@ -9,15 +9,19 @@ import usePagination from '../hooks/usePagination';
 import useEffectAfterFirstUpdate from '../hooks/useEffectAfterFirstUpdate';
 import { useState } from 'react';
 import { useScrollIntoView } from '@mantine/hooks';
+import { config } from '../config';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const data = await axios.get(`http://localhost:3001/api/podcasts`, {
+  const server = config.NEXT_PUBLIC_SERVER_ADDRESS;
+
+  const data = await axios.get(`${server}/api/podcasts`, {
     params: { limit: 10, offset: 0 },
   });
 
   console.log(Number(data.headers['x-total-count']));
   return {
     props: {
+      server: server,
       podcasts: data.data,
       podcastCount: Number(data.headers['x-total-count']),
     },
@@ -27,6 +31,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 const Podcasts: NextPage = ({
   podcasts,
   podcastCount,
+  server,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const [podcastsData, setPodcastsData] = useState(podcasts);
   const { page, setPage, limit, setLimit } = usePagination(10);
@@ -34,12 +39,9 @@ const Podcasts: NextPage = ({
 
   useEffectAfterFirstUpdate(() => {
     async function getPodcasts() {
-      const episodeData = await axios.get(
-        `http://localhost:3001/api/podcasts`,
-        {
-          params: { limit: limit, offset: (page - 1) * limit },
-        }
-      );
+      const episodeData = await axios.get(`${server}/api/podcasts`, {
+        params: { limit: limit, offset: (page - 1) * limit },
+      });
 
       setPodcastsData(episodeData.data);
     }
@@ -64,7 +66,7 @@ const Podcasts: NextPage = ({
   return (
     <Layout>
       <Text
-        ref={targetRef}
+        /*  ref={targetRef} */
         component='h2'
         variant='gradient'
         size='xl'

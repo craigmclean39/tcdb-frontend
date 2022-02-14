@@ -5,11 +5,14 @@ import axios from 'axios';
 import { Text, Group } from '@mantine/core';
 import { Episode } from '../types/podcast';
 import EpisodeLatest from '../components/episodeLatest';
-
+import { config } from '../config';
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const episodeData = await axios.get(`http://localhost:3001/api/episodes`, {
-    params: { limit: 5, offset: 0 },
-  });
+  const episodeData = await axios.get(
+    `${config.NEXT_PUBLIC_SERVER_ADDRESS}/api/episodes`,
+    {
+      params: { limit: 5, offset: 0 },
+    }
+  );
 
   return {
     props: {
@@ -22,11 +25,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 const Home: NextPage = ({
   episodes,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  /* episodes.map((episode as Episode) => {
-
-
-  }); */
-
   return (
     <Layout>
       <Text

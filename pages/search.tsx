@@ -6,30 +6,38 @@ import SearchResult from '../components/searchResult';
 import Layout from '../components/layout';
 import { Highlight } from '@mantine/core';
 import { useEffect, useState } from 'react';
+import { config } from '../config';
 
-const fetcher = async (query: string) => {
-  const data = await axios.post(`http://localhost:3001/api/search`, {
-    search: query,
-  });
-  return data.data;
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  return {
+    props: {
+      server: config.NEXT_PUBLIC_SERVER_ADDRESS,
+    },
+  };
 };
 
-const SearchResults: NextPage = ({ children }) => {
+const SearchResults: NextPage = ({
+  children,
+  server,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const [query, setQuery] = useState('');
 
   const router = useRouter();
-  const { data, error } = useSWR(
-    router.query.search ? router.query.search : null,
-    fetcher,
-    {
-      revalidateOnFocus: false,
-      revalidateOnMount: true,
-      revalidateOnReconnect: false,
-      refreshWhenOffline: false,
-      refreshWhenHidden: false,
-      refreshInterval: 0,
-    }
-  );
+  const [data, setData] = useState();
+
+  useEffect(() => {
+    const doSearch = async () => {
+      const data = await axios.post(`${server}/api/search`, {
+        search: query,
+      });
+
+      setData(data.data);
+    };
+
+    doSearch();
+  }, [query, server]);
 
   useEffect(() => {
     if (Array.isArray(router.query.search)) {
@@ -49,6 +57,7 @@ const SearchResults: NextPage = ({ children }) => {
             type={result.type}
             id={result.id}
             query={query ? query.split(' ') : ''}
+            server={server}
           />
         );
       });

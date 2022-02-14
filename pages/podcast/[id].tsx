@@ -9,13 +9,17 @@ import usePagination from '../../hooks/usePagination';
 import useEffectAfterFirstUpdate from '../../hooks/useEffectAfterFirstUpdate';
 import HtmlHead from '../../components/htmlHead';
 import Layout from '../../components/layout';
+import { config } from '../../config';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { id } = context.query;
 
-  const data = await axios.get(`http://localhost:3001/api/podcast/${id}`, {});
+  const data = await axios.get(
+    `${config.NEXT_PUBLIC_SERVER_ADDRESS}/api/podcast/${id}`,
+    {}
+  );
   const episodeData = await axios.get(
-    `http://localhost:3001/api/podcast/${id}/episodes`,
+    `${config.NEXT_PUBLIC_SERVER_ADDRESS}/api/podcast/${id}/episodes`,
     {
       params: { limit: 10, offset: 0 },
     }
@@ -23,6 +27,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   return {
     props: {
+      server: config.NEXT_PUBLIC_SERVER_ADDRESS,
       podcast: data.data,
       episodes: episodeData.data,
       episodeCount: Number(episodeData.headers['x-total-count']),
@@ -35,6 +40,7 @@ const PodcastDetail: NextPage = ({
   podcast,
   episodes,
   episodeCount,
+  server,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const { page, setPage, limit, setLimit } = usePagination(10);
   const [episodeData, setEpisodeData] = useState(episodes);
@@ -45,7 +51,7 @@ const PodcastDetail: NextPage = ({
   useEffectAfterFirstUpdate(() => {
     async function getEpisodes() {
       const episodeData = await axios.get(
-        `http://localhost:3001/api/podcast/${id}/episodes`,
+        `${server}/api/podcast/${id}/episodes`,
         {
           params: { limit: limit, offset: (page - 1) * limit },
         }

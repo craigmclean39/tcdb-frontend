@@ -5,8 +5,21 @@ import axios from 'axios';
 import { useState } from 'react';
 import Router from 'next/router';
 import Layout from '../components/layout';
+import { config } from '../config';
 
-const Login: NextPage = () => {
+import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  return {
+    props: {
+      server: config.NEXT_PUBLIC_SERVER_ADDRESS,
+    },
+  };
+};
+
+const Login: NextPage = ({
+  server,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const [serverError, setServerError] = useState<string>('');
   const form = useForm({
     initialValues: {
@@ -17,7 +30,7 @@ const Login: NextPage = () => {
 
   const handleSubmit = async (values: typeof form['values']) => {
     try {
-      await axios.post('http://localhost:3001/login', values);
+      await axios.post(`${server}/login`, values);
       //SUCCESS
       Router.push('/podcasts');
     } catch (err) {
