@@ -7,6 +7,7 @@ import Layout from '../components/layout';
 import { Highlight } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import { config } from '../config';
+import SearchHits from '../types/searchHits';
 
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 
@@ -25,15 +26,17 @@ const SearchResults: NextPage = ({
   const [query, setQuery] = useState('');
 
   const router = useRouter();
-  const [data, setData] = useState();
+  const [data, setData] = useState<SearchHits>({ hits: [] });
 
   useEffect(() => {
     const doSearch = async () => {
-      const data = await axios.post(`${server}/api/search`, {
-        search: query,
-      });
+      try {
+        const data = await axios.post(`${server}/api/search`, {
+          search: query,
+        });
 
-      setData(data.data);
+        setData(data.data);
+      } catch (err) {}
     };
 
     doSearch();
@@ -47,7 +50,7 @@ const SearchResults: NextPage = ({
     }
   }, [router.query.search]);
 
-  let searchResults = [];
+  let searchResults: {} | null | undefined = [];
   if (data) {
     if (data.hits.length > 0) {
       searchResults = data.hits.map((result: any) => {
