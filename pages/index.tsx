@@ -10,7 +10,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const episodeData = await axios.get(
     `${config.NEXT_PUBLIC_SERVER_ADDRESS}/api/episodes`,
     {
-      params: { limit: 5, offset: 0 },
+      params: { limit: 6, offset: 0 },
     }
   );
 
@@ -36,7 +36,7 @@ const Home: NextPage = ({
         Latest
       </Text>
 
-      <Group>
+      <Group position='center' sx={{ alignContent: 'flex-start' }}>
         {episodes.map((episode: Episode) => {
           return <EpisodeLatest key={episode.guid} episode={episode} />;
         })}

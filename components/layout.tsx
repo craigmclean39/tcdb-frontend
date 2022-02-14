@@ -12,7 +12,7 @@ const useStyles = createStyles((theme, _params, getRef) => {
       justifyContent: 'center',
     },
     container: {
-      width: 'clamp(100px, 100vw, 1024px)',
+      width: 'clamp(100px, 90vw, 1024px)',
     },
   };
 });

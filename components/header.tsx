@@ -1,6 +1,6 @@
 import { Header } from '@mantine/core';
 import { createStyles, TextInput, Button, Anchor, Title } from '@mantine/core';
-import { useForm } from '@mantine/hooks';
+import { useForm, useMediaQuery } from '@mantine/hooks';
 import axios from 'axios';
 import Router from 'next/router';
 import { BsSearch } from 'react-icons/bs';
@@ -17,7 +17,7 @@ const useStyles = createStyles((theme, _params, getRef) => {
     },
     innerHeader: {
       display: 'flex',
-      width: 'clamp(100px, 100vw, 1024px)',
+      width: 'clamp(100px, 90vw, 1024px)',
       alignItems: 'center',
       justifyContent: 'space-between',
     },
@@ -46,6 +46,9 @@ const AdminHeader: React.FC = () => {
   };
 
   const { classes } = useStyles();
+
+  const matches = useMediaQuery('(min-width: 500px)');
+
   return (
     <Header height={70} className={classes.header}>
       <div className={classes.innerHeader}>
@@ -61,23 +64,27 @@ const AdminHeader: React.FC = () => {
             TCPD
           </Title>
         </Anchor>
-        <form onSubmit={form.onSubmit(handleSubmit)} className={classes.search}>
-          <TextInput
-            className={classes.button}
-            icon={<BsSearch />}
-            size='xs'
-            type='search'
-            placeholder='Enter search'
-            radius='sm'
-            aria-label='Search'
-            value={form.values.search}
-            onChange={(event) =>
-              form.setFieldValue('search', event.currentTarget.value)
-            }></TextInput>
-          <Button size='xs' type='submit' className={classes.button}>
-            Search
-          </Button>
-        </form>
+        {matches ? (
+          <form
+            onSubmit={form.onSubmit(handleSubmit)}
+            className={classes.search}>
+            <TextInput
+              className={classes.button}
+              icon={<BsSearch />}
+              size='xs'
+              type='search'
+              placeholder='Enter search'
+              radius='sm'
+              aria-label='Search'
+              value={form.values.search}
+              onChange={(event) =>
+                form.setFieldValue('search', event.currentTarget.value)
+              }></TextInput>
+            <Button size='xs' type='submit' className={classes.button}>
+              Search
+            </Button>
+          </form>
+        ) : null}
         <Anchor href='/podcasts'>Podcasts</Anchor>
       </div>
     </Header>

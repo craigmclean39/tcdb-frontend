@@ -8,11 +8,23 @@ import {
   Anchor,
 } from '@mantine/core';
 
+import { useMediaQuery } from '@mantine/hooks';
+
 const useStyles = createStyles((theme, _params, getRef) => {
   return {
     grid: {
       display: 'grid',
       gridTemplateColumns: '2fr 5fr',
+    },
+    small: {
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    smallImage: {
+      width: 300,
+      height: 300,
     },
   };
 });
@@ -33,10 +45,17 @@ const PodcastHeader: React.FC<PodcastHeaderProps> = ({
   title,
 }) => {
   const { classes } = useStyles();
+  const matches = useMediaQuery('(min-width: 1100px)');
+  const small = useMediaQuery('(max-width: 800px)');
 
   return (
-    <header className={classes.grid}>
-      <Image alt={imageAlt} src={image} my='xl' mx='xl'></Image>
+    <header className={small ? classes.small : classes.grid}>
+      <Image
+        alt={imageAlt}
+        src={image}
+        my='xl'
+        mx='xl'
+        className={small ? classes.smallImage : ''}></Image>
       <Group
         direction='column'
         mx='xl'
@@ -47,7 +66,7 @@ const PodcastHeader: React.FC<PodcastHeaderProps> = ({
             {author}
           </Text>
 
-          <Title order={1} style={{ fontSize: 60 }}>
+          <Title order={1} style={{ fontSize: matches ? 60 : 40 }}>
             {title}
           </Title>
         </Group>
